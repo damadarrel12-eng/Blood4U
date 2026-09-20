@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "656388532969",
+    "project_id": "blood4u-8249a",
+    "storage_bucket": "blood4u-8249a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:656388532969:android:5d7fcc3264805a1e9bde78",
+        "android_client_info": {
+          "package_name": "com.example.newblood4u_temp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQjAUzXCLq0djr7B6KtR0-bUQsK0cHfHE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
