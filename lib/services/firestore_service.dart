@@ -94,7 +94,9 @@ class FirestoreService {
 
   String conversationIdFor(String firstUserId, String secondUserId) {
     final participants = [firstUserId, secondUserId]..sort();
-    return '${participants[0]}_${participants[1]}';
+    final first = participants[0];
+    final second = participants[1];
+    return '${first.length}:$first${second.length}:$second';
   }
 
   Future<String> ensureConversation({
@@ -106,14 +108,25 @@ class FirestoreService {
     }
     final id = conversationIdFor(currentUserId, otherUserId);
     final reference = _db.collection('conversations').doc(id);
-    final existing = await reference.get();
-    if (!existing.exists) {
-      final participants = [currentUserId, otherUserId]..sort();
-      await reference.set({
-        'participants': participants,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-    }
+    final participants = [currentUserId, otherUserId]..sort();
+    await _db.runTransaction<void>((transaction) async {
+      final existing = await transaction.get(reference);
+      if (!existing.exists) {
+        transaction.set(reference, {
+          'participants': participants,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+        return;
+      }
+
+      final existingParticipants =
+          List<String>.from(existing.data()?['participants'] ?? const []);
+      if (existingParticipants.length != 2 ||
+          !existingParticipants.contains(currentUserId) ||
+          !existingParticipants.contains(otherUserId)) {
+        throw StateError('Conversation participants do not match.');
+      }
+    });
     return id;
   }
 
