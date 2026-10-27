@@ -1,23 +1,22 @@
-import 'package:location/location.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 class LocationService {
-  final Location _location = Location();
+  Future<Position?> getCurrentLocation() async {
+    if (!await Geolocator.isLocationServiceEnabled()) return null;
 
-  Future<LatLng> getCurrentLocation() async {
-    bool serviceEnabled = await _location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await _location.requestService();
-      if (!serviceEnabled) return LatLng(3.848, 11.502); // default Yaoundé
+    var permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      return null;
     }
 
-    PermissionStatus permissionGranted = await _location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await _location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) return LatLng(3.848, 11.502);
-    }
-
-    final locData = await _location.getLocation();
-    return LatLng(locData.latitude!, locData.longitude!);
+    return Geolocator.getCurrentPosition(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+      ),
+    );
   }
 }

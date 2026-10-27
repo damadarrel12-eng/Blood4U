@@ -1,25 +1,34 @@
-class MessageModel {
-  String text;
-  String senderId;
-  DateTime time;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-  MessageModel({
+class MessageModel {
+  const MessageModel({
+    required this.id,
     required this.text,
     required this.senderId,
-    required this.time,
+    required this.createdAt,
   });
 
-  Map<String, dynamic> toMap() => {
-        'text': text,
-        'senderId': senderId,
-        'time': time,
-      };
+  final String id;
+  final String text;
+  final String senderId;
+  final DateTime? createdAt;
 
-  factory MessageModel.fromMap(Map<String, dynamic> map) {
+  factory MessageModel.fromDocument(
+    QueryDocumentSnapshot<Map<String, dynamic>> document,
+  ) {
+    final data = document.data();
+    final timestamp = data['createdAt'];
     return MessageModel(
-      text: map['text'],
-      senderId: map['senderId'],
-      time: map['time'].toDate(),
+      id: document.id,
+      text: (data['text'] as String?) ?? '',
+      senderId: (data['senderId'] as String?) ?? '',
+      createdAt: timestamp is Timestamp ? timestamp.toDate() : null,
     );
   }
+
+  Map<String, dynamic> toMap({required String senderId}) => {
+        'text': text,
+        'senderId': senderId,
+        'createdAt': FieldValue.serverTimestamp(),
+      };
 }

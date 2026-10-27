@@ -1,35 +1,26 @@
 import 'package:flutter/material.dart';
 
 final lightTheme = ThemeData(
-  brightness: Brightness.light,
-  primaryColor: Colors.red,
-  scaffoldBackgroundColor: Colors.white,
-
-  appBarTheme: AppBarTheme(
-    backgroundColor: Colors.red,
-    foregroundColor: Colors.white,
-    elevation: 0,
+  useMaterial3: true,
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: const Color(0xFFB3261E),
+    brightness: Brightness.light,
   ),
-
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.red,
-      foregroundColor: Colors.white,
-      padding: EdgeInsets.symmetric(vertical: 14),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-    ),
-  ),
-
+  scaffoldBackgroundColor: const Color(0xFFFFFBFA),
+  appBarTheme: const AppBarTheme(centerTitle: false),
   inputDecorationTheme: InputDecorationTheme(
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-    ),
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
     focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.red),
+      borderRadius: BorderRadius.circular(12),
+      borderSide: const BorderSide(color: Color(0xFFB3261E), width: 2),
     ),
   ),
 );
 
-final darkTheme = lightTheme; // Force white/red theme always
+final darkTheme = ThemeData(
+  useMaterial3: true,
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: const Color(0xFFB3261E),
+    brightness: Brightness.dark,
+  ),
+);
